@@ -105,7 +105,7 @@ def main():
 
     # List of 256 unique sets of parameters
     # Any of the 10 folders will contain 256 sets with same names, so choose any
-    sets_list = next(os.walk('experiments/05M_24D-13H_48M_06S/'))[1]
+    sets_list = next(os.walk('experiments/05M_25D-01H_32M_11S/'))[1]
     # print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above
