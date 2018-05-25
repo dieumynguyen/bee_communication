@@ -82,10 +82,11 @@ def combine_replicates(data_folders, param_set):
         all_replicates.append(data)
 
     # Truncate string "param_set" to save as name for json file
-    truncate_name = param_set[12:]
+    start_char = "Q"
+    truncate_name = param_set[param_set.index(start_char):]
 
     # Write the cumulative list containing all replicates to JSON
-    with open('combined_replicates/{}.json'.format(truncate_name), 'w') as outfile:
+    with open('combined_replicates_test/{}.json'.format(truncate_name), 'w') as outfile:
         json.dump(all_replicates, outfile)
 
     return None
@@ -98,7 +99,8 @@ def main():
     # print(d["Replicate 1"]['worker_bee_concentration'])
 
     # All data folders: ultimately 2560
-    data_folders = glob2.glob("experiments/*/*")
+    # Modify the directory to run on particular experiments directory(ies)
+    data_folders = glob2.glob("experiments/05M_25D-05H*/*")
     # print(data_folders)
 
     # List of 256 unique sets of parameters
@@ -108,8 +110,8 @@ def main():
 
     # Test "combine_replicates" function using 2 sample lists above
     for k in sets_list:
+        print("Combining all replicates of set: {}".format(k))
         save_lists_json = combine_replicates(data_folders, k)
-        print("Finished combining all replicates of set: {}".format(k))
 
     return None
 
