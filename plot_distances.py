@@ -36,35 +36,27 @@ plt.rcParams.update(params)
 
 ########################################################################
 
-def plot_avg_distances(dataset):
+def plot_avg_distances(data_json):
 
     ''' For each replicate in a set of parameters, open that cumulative
     JSON and plot each replicate as a line in a single plot.
     '''
 
-    with open("combined_replicates/" + dataset, "r") as f:
+    with open("avg_distance_data/" + data_json, "r") as f:
         data = json.load(f)
+
+    fig = plt.figure(figsize=(6,4))
+    ax = plt.axes()
 
     start_char = "j"
     filename = f.name
-    fig_name = filename[20:filename.index(start_char)]
-
-    # fig = plt.figure(figsize=(6,4))
-    fig = plt.figure()
-    ax = plt.axes()
+    fig_name = filename[18:filename.index(start_char)]
 
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    for i in range(len(data)):
-        average_distances = []
-        for l in range(160):
-            avg = data[i]['Replicate {}'.format(i+1)]['distance_from_queen'][l]['average']
-            average_distances.append(avg)
-
-
-        # Plot the line onto the same figure as other lines
-        ax.plot(average_distances, label='Swarm {}'.format(i+1))
+    for i, d in enumerate(data):
+        ax.plot(d, label='Swarm {}'.format(i+1))
 
         plt.xlim(0, 160)
         plt.ylim(0, 5)
@@ -75,7 +67,7 @@ def plot_avg_distances(dataset):
         plt.ylabel('Average distance to queen')
         plt.title('{}'.format(fig_name[:-1]))
 
-        # plt.tight_layout()
+        plt.tight_layout()
         plt.savefig("figures/distance_to_queen/{}pdf".format(fig_name), transparent=True)
 
     plt.close()
@@ -83,9 +75,6 @@ def plot_avg_distances(dataset):
 ########################################################################
 
 def main():
-    # Test above function
-    # plot_avg_distances("Q0.01_W0.005_D0.05_T0.001.json")
-
     # Iterate through all (256) JSON's and produce 1 figure each
     reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("combined_replicates/*")))
 

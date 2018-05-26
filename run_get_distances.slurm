@@ -14,6 +14,6 @@ pwd; hostname; date
 
 module load python/3.6.3
 
-python /Users/ding1018/bee_communication_project/plot_distances.py
+python /Users/ding1018/bee_communication_project/get_avg_distance_data.py
 
 date
