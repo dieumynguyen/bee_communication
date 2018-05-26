@@ -4,12 +4,14 @@ import numpy as np
 import plotly.plotly as py
 import matplotlib as mpl
 from matplotlib import cycler
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objs as go
 import os
 import glob2
 import re
+
 
 ############################# STYLESHEET ###############################
 
@@ -40,14 +42,15 @@ def plot_avg_distances(dataset):
     JSON and plot each replicate as a line in a single plot.
     '''
 
-    with open("combined_replicates_test/" + dataset, "r") as f:
+    with open("combined_replicates/" + dataset, "r") as f:
         data = json.load(f)
 
     start_char = "j"
     filename = f.name
     fig_name = filename[20:filename.index(start_char)]
 
-    fig = plt.figure(figsize=(6,4))
+    # fig = plt.figure(figsize=(6,4))
+    fig = plt.figure()
     ax = plt.axes()
 
     ax.spines['right'].set_visible(False)
@@ -72,8 +75,10 @@ def plot_avg_distances(dataset):
         plt.ylabel('Average distance to queen')
         plt.title('{}'.format(fig_name[:-1]))
 
-        plt.tight_layout()
-        plt.savefig("figures_test/distance_to_queen/{}pdf".format(fig_name), transparent=True)
+        # plt.tight_layout()
+        plt.savefig("figures/distance_to_queen/{}pdf".format(fig_name), transparent=True)
+
+    plt.close()
 
 ########################################################################
 
@@ -82,7 +87,7 @@ def main():
     # plot_avg_distances("Q0.01_W0.005_D0.05_T0.001.json")
 
     # Iterate through all (256) JSON's and produce 1 figure each
-    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("combined_replicates_test/*")))
+    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("combined_replicates/*")))
 
     for r in reps_list:
         print("Plotting average distance to queen for: {}".format(r))
