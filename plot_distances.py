@@ -26,7 +26,7 @@ plt.rcParams['axes.labelsize'] = 14
 plt.rcParams['axes.labelweight'] = 'normal'
 plt.rcParams['xtick.labelsize'] = 14
 plt.rcParams['ytick.labelsize'] = 14
-plt.rcParams['legend.fontsize'] = 12
+plt.rcParams['legend.fontsize'] = 10
 plt.rcParams['figure.titlesize'] = 14
 plt.rcParams['lines.linewidth'] = 3
 params = {"ytick.color" : "#535956",
@@ -39,7 +39,7 @@ plt.rcParams.update(params)
 ########################################################################
 
 def standardize_filenames(fname, start_char):
-    fig_name = fname[20:fname.index(start_char)-1]
+    fig_name = fname[18:fname.index(start_char)-1]
     split_list = fig_name.split("_")
     # print(split_list)
 
@@ -79,7 +79,7 @@ def plot_avg_distances(data_json):
         data = json.load(f)
 
     fig = plt.figure()
-    ax = plt.axes()
+    ax = plt.axes([0.1, 0.1, 0.6, 0.75])  # try
 
     # Standardize file names
     fname = f.name
@@ -96,16 +96,16 @@ def plot_avg_distances(data_json):
         plt.xlim(0, 160)
         plt.ylim(0, 5)
 
-        plt.legend(bbox_to_anchor=(1,0.5), loc="center left")
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
         plt.xlabel('Time (step)')
         plt.ylabel('Average distance to queen')
         plt.title('{}'.format(fig_name))
 
-        plt.tight_layout()
+        # plt.tight_layout()
         plt.savefig("figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
 
-    plt.close()
+    # plt.close()
 
 ########################################################################
 
