@@ -112,10 +112,14 @@ def plot_avg_distances(data_json):
 def main():
 
     # Iterate through all (256) JSON's and produce 1 figure each
-    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/Q0.5_W0.005_D0.5_T0.001.json")))
+    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/Q0.17333333333333334_W0.5*.json")))
 
     for i, r in enumerate(reps_list):
         print("{}. Plotting average distance to queen for: {}".format(i+1, r))
         plot_avg_distances(r)
 
-main()
+
+if __name__ == '__main__':
+    main()
+else:
+    print("ERROR")
