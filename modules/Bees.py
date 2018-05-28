@@ -126,7 +126,7 @@ class Bee(object):
             steps = np.random.randint(1, 6)
 
             # Constrain movement to board (self.x and self.y here)
-            self.__dict__[direction] += self.delta_x*sign*steps
+            self.__dict__[direction] += sign*self.delta_x*steps
 
             if self.__dict__[direction] <= self.min_x:
                 self.__dict__[direction] += self.delta_x
@@ -243,6 +243,7 @@ class Swarm(object):
         bees = {"queen" : queen_data}
 
         if random_positions:
+            # Randomly set step size for each bee, between the min and max
             position = lambda : np.random.uniform(min_x, max_x)
             new_position = lambda bee_i : (position(), position())
         else:

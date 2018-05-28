@@ -190,6 +190,7 @@ class Environment(Plotter):
                 bee_info = bee.measure()
 
                 # If bee pheromone is active, update concentration map
+                # DM: For later simulations, get number of scenting bees
                 if bee.pheromone_active:
 
                     # Check if bee is emitting
