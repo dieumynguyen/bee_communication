@@ -16,7 +16,8 @@ def init_factors():
     # Setup parameters for model
 
     global queen_bee_concentrations
-    queen_bee_concentrations = np.linspace(0.01, 0.5, CONDITION_COUNTS["queen"])
+    # queen_bee_concentrations = np.linspace(0.01, 0.5, CONDITION_COUNTS["queen"])
+    queen_bee_concentrations = [0.5]
 
     global worker_bee_concentrations
     worker_bee_concentrations = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_concentration"])
@@ -128,15 +129,15 @@ def main(run_event):
 
     if TESTING:
         queen_bee_params = {
-            "concentration"     : 0.1,
-            "emission_period"   : 15
+            "concentration"     : 0.335,
+            "emission_period"   : 6
         }
 
         worker_bee_params = {
-            "number"            : NUM_WORKERS,
-            "concentration"     : 0.01,
-            "threshold"         : 0.05,
-            "emission_period"   : 4,
+            "number"            : 10,
+            "concentration"     : 0.17,
+            "threshold"         : 0.001,
+            "emission_period"   : 8,
             "disable_pheromone" : True
         }
 
@@ -147,8 +148,12 @@ def main(run_event):
             "experiment_dir"            : experiment_dir,
             "queen_bee_params"          : queen_bee_params,
             "worker_bee_params"         : worker_bee_params,
-            "diffusion_coefficient"     : DIFFUSION_COEFFICIENT,
-            "spatiotemporal_parameters" : spatiotemporal_parameters
+            "diffusion_coefficient"     : 0.3,
+            "spatiotemporal_parameters" : spatiotemporal_parameters,
+            "Q"                         : 0.173,
+            "W"                         : 0.005,
+            "D"                         : 0.3,
+            "T"                         : 0.001,
         }
         run_experiment(**experiment_params)     # pass in dict of parameters
 

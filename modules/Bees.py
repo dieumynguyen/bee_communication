@@ -33,7 +33,10 @@ class Bee(object):
         self.found_queen = False
         self.queen_movement_params = queen_movement_params
         self.found_queen_direction = False
-        self.wait_threshold = int(np.random.normal(10, 1)) # wait X timesteps after finding the queen before moving
+        # self.wait_threshold = int(np.random.normal(10, 1)) # wait X (10???) timesteps after finding the queen before moving
+        # DM: test wait_threshold to be 4
+        self.wait_threshold = 8
+
         self.num_timesteps_waited = 0
 
         # Bias is directed pheromone emission for workers
@@ -166,7 +169,10 @@ class Bee(object):
 ### ------------------------------------------------------- ###
 
     def measure(self):
-        emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
+        # DM: Test emission_period
+        emitting = self.pheromone_emission_timestep <= self.emission_period
+
+        # emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
 
         bee_info = {
             "x"                     : self.x,
@@ -204,17 +210,21 @@ class Bee(object):
 
             # Assign directions to queen
             self.directions_to_queen = { "x" : adjusted_indices[0], "y": adjusted_indices[1] }
+        #
+        #     # Update bias
+        #     bias_direction_x = -1 if self.directions_to_queen["x"] > 0 else 1
+        #     bias_direction_y = -1 if self.directions_to_queen["y"] > 0 else 1
+        #
+        #     # Vector magnitude
+        #     magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
 
             # Update bias
-            bias_direction_x = -1 if self.directions_to_queen["x"] > 0 else 1
-            bias_direction_y = -1 if self.directions_to_queen["y"] > 0 else 1
+            # self.bias_x = bias_direction_x / float(magn)
+            # self.bias_y = bias_direction_y / float(magn)
 
-            # Vector norm
-            norm = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
-
-            # Update bias
-            self.bias_x = bias_direction_x / float(norm)
-            self.bias_y = bias_direction_y / float(norm)
+            # Try fixing the bias
+            self.bias_x = 0
+            self.bias_y = 1
 
         except ValueError:
             self.found_queen = True
@@ -226,7 +236,7 @@ class Swarm(object):
     def __init__(self, num_workers, queen_bee_concentration, worker_bee_concentration, worker_bee_threshold, delta_t, delta_x, min_x, max_x, emission_periods, queen_movement_params, worker_plot_dir, rotate_bees_ON, random_positions):
 
         queen_data = {
-            "init_position"             : (0, 0),
+            "init_position"             : (0, 0),       # DM: Move queen up for bias test
             "pheromone_concentration"   : queen_bee_concentration,
             "activation_threshold"      : worker_bee_threshold,
             "activity"                  : {
@@ -234,7 +244,7 @@ class Swarm(object):
                 "pheromone" : True
             },
             "movement"                  : (0.0, 0.0),
-            "bias"                      : (0, 0),
+            "bias"                      : (0, 0),           # DM: Test bias on queen
             "emission_period"           : emission_periods["queen"],
             "queen_movement_params"     : queen_movement_params,
             "plot_dir"                  : None
