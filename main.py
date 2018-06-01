@@ -20,15 +20,15 @@ def init_factors():
     queen_bee_concentrations = [0.15]
 
     global worker_bee_concentrations
-    worker_bee_concentrations = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_concentration"])
+    worker_bee_concentrations = np.linspace(0.005, 0.3, CONDITION_COUNTS["worker_concentration"])
 
     global diffusion_coefficients
     # diffusion_coefficients = np.linspace(0.05, 0.5, CONDITION_COUNTS["diffusion_coefficient"])
     diffusion_coefficients = [0.35]
 
     global worker_bee_thresholds
-    worker_bee_thresholds = np.linspace(0.005, 0.05, CONDITION_COUNTS["worker_threshold"])
-
+    # worker_bee_thresholds = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_threshold"])
+    worker_bee_thresholds = [0.5]
 
 ##################################################################################################
 
