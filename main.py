@@ -17,16 +17,17 @@ def init_factors():
 
     global queen_bee_concentrations
     # queen_bee_concentrations = np.linspace(0.01, 0.5, CONDITION_COUNTS["queen"])
-    queen_bee_concentrations = [0.5]
+    queen_bee_concentrations = [0.15]
 
     global worker_bee_concentrations
     worker_bee_concentrations = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_concentration"])
 
     global diffusion_coefficients
-    diffusion_coefficients = np.linspace(0.05, 0.5, CONDITION_COUNTS["diffusion_coefficient"])
+    # diffusion_coefficients = np.linspace(0.05, 0.5, CONDITION_COUNTS["diffusion_coefficient"])
+    diffusion_coefficients = [0.35]
 
     global worker_bee_thresholds
-    worker_bee_thresholds = np.linspace(0.001, 0.005, CONDITION_COUNTS["worker_threshold"])
+    worker_bee_thresholds = np.linspace(0.005, 0.05, CONDITION_COUNTS["worker_threshold"])
 
 
 ##################################################################################################
@@ -129,6 +130,11 @@ def main(run_event):
 
     # Testing conditions: 1 set of parameters
 
+    ''' Run tests:
+    1. 50 workers with Q = 0.15, W = 0.05, D = 0.3, T = 0.005
+    2. Work with h5 files to see if needed: Save data on # scenting bees, concentration in arena, positions of bees
+    '''
+
     if TESTING:
         queen_bee_params = {
             "concentration"     : 0.15,
@@ -136,9 +142,9 @@ def main(run_event):
         }
 
         worker_bee_params = {
-            "number"            : 3,
-            "concentration"     : 0.05,
-            "threshold"         : 0.005,
+            "number"            : 50,
+            "concentration"     : 0.005,
+            "threshold"         : 0.02,
             "emission_period"   : 6,
             "disable_pheromone" : True
         }
@@ -150,12 +156,12 @@ def main(run_event):
             "experiment_dir"            : experiment_dir,
             "queen_bee_params"          : queen_bee_params,
             "worker_bee_params"         : worker_bee_params,
-            "diffusion_coefficient"     : 0.3,
+            "diffusion_coefficient"     : 0.5,
             "spatiotemporal_parameters" : spatiotemporal_parameters,
             "Q"                         : 0.15,
             "W"                         : 0.005,
-            "D"                         : 0.3,
-            "T"                         : 0.001,
+            "D"                         : 0.5,
+            "T"                         : 0.02,
             "wb"                        : 1,
         }
         run_experiment(**experiment_params)     # pass in dict of parameters
