@@ -35,7 +35,7 @@ class Bee(object):
         self.found_queen_direction = False
         # self.wait_threshold = int(np.random.normal(10, 1)) # wait X (10???) timesteps after finding the queen before moving
         # DM: test wait_threshold to be 4
-        self.wait_threshold = 8
+        self.wait_threshold = 6
 
         self.num_timesteps_waited = 0
 
@@ -170,9 +170,15 @@ class Bee(object):
 
     def measure(self):
         # DM: Test emission_period
-        emitting = self.pheromone_emission_timestep <= self.emission_period
 
-        # emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
+        # DM: Try distinguishing queen vs workers for these so
+        # queen emits every x emission_period while workers only once
+        # This works!
+        if self.type == "queen":
+            emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
+        else:
+            emitting = self.pheromone_emission_timestep <= self.emission_period
+
 
         bee_info = {
             "x"                     : self.x,
@@ -210,21 +216,25 @@ class Bee(object):
 
             # Assign directions to queen
             self.directions_to_queen = { "x" : adjusted_indices[0], "y": adjusted_indices[1] }
-        #
-        #     # Update bias
-        #     bias_direction_x = -1 if self.directions_to_queen["x"] > 0 else 1
-        #     bias_direction_y = -1 if self.directions_to_queen["y"] > 0 else 1
-        #
-        #     # Vector magnitude
-        #     magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
 
             # Update bias
-            # self.bias_x = bias_direction_x / float(magn)
-            # self.bias_y = bias_direction_y / float(magn)
+            bias_direction_x = -1 if self.directions_to_queen["x"] > 0 else 1
+            bias_direction_y = -1 if self.directions_to_queen["y"] > 0 else 1
 
-            # Try fixing the bias
-            self.bias_x = 0
-            self.bias_y = 1
+            # Vector magnitude / norm
+            magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
+
+            # Define a scalar multiplier for w_x and worker_y
+            # Set to 1 for now
+            w_b = 1
+
+            # Update bias - unit vectors
+            self.bias_x = w_b * (bias_direction_x / float(magn))
+            self.bias_y = w_b * (bias_direction_y / float(magn))
+
+            # DM: Test fixing the bias
+            # self.bias_x = 0
+            # self.bias_y = 1
 
         except ValueError:
             self.found_queen = True

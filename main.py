@@ -31,11 +31,11 @@ def init_factors():
 
 ##################################################################################################
 
-def run_experiment(run_event, experiment_i, Q, W, D, T, experiment_iteration, experiment_dir, queen_bee_params, worker_bee_params, diffusion_coefficient, spatiotemporal_parameters):
+def run_experiment(run_event, experiment_i, Q, W, D, T, wb, experiment_iteration, experiment_dir, queen_bee_params, worker_bee_params, diffusion_coefficient, spatiotemporal_parameters):
 
     # Make directories
 
-    dirs = utils.make_directories(experiment_dir, experiment_i, Q, W, D, T, experiment_iteration, worker_bee_params["number"])
+    dirs = utils.make_directories(experiment_dir, experiment_i, Q, W, D, T, wb, experiment_iteration, worker_bee_params["number"])
     experiment_dir_path = dirs[0]
     data_dir_path = dirs[1]
     if PLOTTING_ON:
@@ -58,6 +58,7 @@ def run_experiment(run_event, experiment_i, Q, W, D, T, experiment_iteration, ex
         "delta_x"                   : spatiotemporal_parameters["spatial"]["delta_x"],
         "min_x"                     : spatiotemporal_parameters["spatial"]["min_x"],
         "max_x"                     : spatiotemporal_parameters["spatial"]["max_x"],
+        # "w_b"                       : spatiotemporal_parameters["spatial"]["w_b"],
         "emission_periods"          : {
             "queen"     : queen_bee_params["emission_period"],
             "worker"    : worker_bee_params["emission_period"]
@@ -105,7 +106,8 @@ def main(run_event):
         "spatial"   : {
             "min_x"     : MIN_X,
             "max_x"     : MAX_X,
-            "delta_x"   : DELTA_X
+            "delta_x"   : DELTA_X,
+            #"w_b"       : w_b
         },
         "temporal"  : {
             "start_t"   : 0,
@@ -129,15 +131,15 @@ def main(run_event):
 
     if TESTING:
         queen_bee_params = {
-            "concentration"     : 0.335,
+            "concentration"     : 0.15,
             "emission_period"   : 6
         }
 
         worker_bee_params = {
-            "number"            : 10,
-            "concentration"     : 0.17,
-            "threshold"         : 0.001,
-            "emission_period"   : 8,
+            "number"            : 3,
+            "concentration"     : 0.05,
+            "threshold"         : 0.005,
+            "emission_period"   : 6,
             "disable_pheromone" : True
         }
 
@@ -150,10 +152,11 @@ def main(run_event):
             "worker_bee_params"         : worker_bee_params,
             "diffusion_coefficient"     : 0.3,
             "spatiotemporal_parameters" : spatiotemporal_parameters,
-            "Q"                         : 0.173,
+            "Q"                         : 0.15,
             "W"                         : 0.005,
             "D"                         : 0.3,
             "T"                         : 0.001,
+            "wb"                        : 1,
         }
         run_experiment(**experiment_params)     # pass in dict of parameters
 
@@ -171,6 +174,7 @@ def main(run_event):
         W = 0
         D = 0
         T = 0
+        wb = 1
         # End DM's adds
 
         for queen_bee_concentration in queen_bee_concentrations:
@@ -205,6 +209,7 @@ def main(run_event):
                                 "W"                         : W,
                                 "D"                         : D,
                                 "T"                         : T,
+                                "wb"                        : wb,
                                 "experiment_iteration"      : experiment_condition_iteration,
                                 "experiment_dir"            : experiment_dir,
                                 "queen_bee_params"          : queen_bee_params,

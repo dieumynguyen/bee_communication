@@ -1,9 +1,9 @@
 import os
 from modules.config import *
 
-def make_directories(experiment_dir, experiment_i, Q, W, D, T, experiment_iteration, num_worker_bees):
+def make_directories(experiment_dir, experiment_i, Q, W, D, T, wb, experiment_iteration, num_worker_bees):
     # Experiment directory
-    experiment_dir_path = "{}/experiment{}_Q{}_W{}_D{}_T{}".format(experiment_dir, experiment_i, Q, W, D, T,)
+    experiment_dir_path = "{}/experiment{}_Q{}_W{}_D{}_T{}_wb{}".format(experiment_dir, experiment_i, Q, W, D, T, wb)
 
     # data directory
     data_dir_path = "{}/data".format(experiment_dir_path)
