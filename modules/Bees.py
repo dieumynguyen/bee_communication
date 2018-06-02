@@ -164,7 +164,7 @@ class Bee(object):
                 self.activate_pheromones()
                 self.found_queen_direction = True
                 # DM added scenting data for single bees
-                self.scenting = True
+                # self.scenting = True
 
         # look for queen
         if not self.type == "queen":
@@ -180,11 +180,13 @@ class Bee(object):
         # DM: Try distinguishing queen vs workers for these so
         # queen emits every x emission_period while workers only once
         # This works!
+        emitting = False
         if self.type == "queen":
             emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
         else:
             emitting = self.pheromone_emission_timestep <= self.emission_period
-
+            # if self.pheromone_emission_timestep <= self.emission_period:
+            #     emitting = True
 
         bee_info = {
             "x"                     : self.x,
@@ -198,6 +200,8 @@ class Bee(object):
             "scenting"              : self.scenting,
             "type"                  : self.type
         }
+
+
         return bee_info
 
 ### ------------------------------------------------------- ###
@@ -206,6 +210,7 @@ class Bee(object):
         self.pheromone_active = True
         self.random_movement_active = False
         # DM added scenting data
+        # self.scenting = True
 
 ### ------------------------------------------------------- ###
 

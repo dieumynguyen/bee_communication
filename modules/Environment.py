@@ -195,9 +195,15 @@ class Environment(Plotter):
                 # DM: For later simulations, get number of scenting bees
                 if bee.pheromone_active:
 
+                    # DM added scenting data
+                    # bee_info["scenting"] = True
+
                     # Check if bee is emitting
                     if bee_info["emitting"]:
                         bee_info["init_t"] = environment_timestep
+
+                        # DM added scenting data
+                        # bee_info["scenting"] = True
 
                         # Add emission to sources
                         pheromone_emission_sources.append(bee_info)
