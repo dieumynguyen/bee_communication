@@ -33,6 +33,10 @@ class Bee(object):
         self.found_queen = False
         self.queen_movement_params = queen_movement_params
         self.found_queen_direction = False
+
+        # DM added scenting data for each bee
+        self.scenting = False
+
         # self.wait_threshold = int(np.random.normal(10, 1)) # wait X (10???) timesteps after finding the queen before moving
         # DM: test wait_threshold to be 4
         self.wait_threshold = 6
@@ -159,6 +163,8 @@ class Bee(object):
             if concentration_map[x_i, y_i] >= self.activation_threshold:
                 self.activate_pheromones()
                 self.found_queen_direction = True
+                # DM added scenting data for single bees
+                self.scenting = True
 
         # look for queen
         if not self.type == "queen":
@@ -188,6 +194,8 @@ class Bee(object):
             "concentration"         : self.concentration,
             "emitting"              : emitting,
             "found_queen_direction" : self.found_queen_direction,
+            # DM added scenting data
+            "scenting"              : self.scenting,
             "type"                  : self.type
         }
         return bee_info
@@ -197,6 +205,7 @@ class Bee(object):
     def activate_pheromones(self):
         self.pheromone_active = True
         self.random_movement_active = False
+        # DM added scenting data
 
 ### ------------------------------------------------------- ###
 
