@@ -99,15 +99,24 @@ class Bee(object):
         # If pheromone active, increment emission timestep
         if self.pheromone_active:
             self.pheromone_emission_timestep += 1
+            # # DM: try adding scenting data here
+            # self.scenting = True
 
         # Check if queen has been found
         if self.found_queen_direction:
             # Check if queen-directed movement can be enabled yet
             if self.num_timesteps_waited < self.wait_threshold:
                 self.num_timesteps_waited += 1
+
+                # DM: try adding scenting data here
+                self.scenting = True
+
             else:
                 # Waited long enough; Enable movement toward queen
                 self.queen_directed_movement = True
+
+                # DM: try adding scenting data here
+                self.scenting = False
 
                 # Set queen movement parameters
                 # ========================================================================

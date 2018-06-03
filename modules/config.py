@@ -12,13 +12,13 @@ RANDOM_BEE_POSITIONS = True # If False, reads from bee_positions.txt
 
 CONDITION_COUNTS = {
     "queen"                     : 1,
-    "worker_concentration"      : 1,
-    "worker_threshold"          : 1,
-    "diffusion_coefficient"     : 1
+    "worker_concentration"      : 4,
+    "worker_threshold"          : 4,
+    "diffusion_coefficient"     : 4
 }
 
 THREADS = []
-SECONDS_TO_RUN = 4   # change to 8
+SECONDS_TO_RUN = 8   # change to 8
 DELTA_T = 0.05
 DELTA_X = 0.01
 MIN_X = -3
