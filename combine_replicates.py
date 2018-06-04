@@ -1,4 +1,4 @@
-# Combine data of interest of 10 replicates of a single set of parameters
+# Combine data of interest of 15 replicates of a single set of parameters
 # into a single json file for further analysis
 
 ########################################################################
@@ -6,10 +6,6 @@
 # Imports
 import json
 import numpy as np
-import plotly.plotly as py
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.graph_objs as go
 import os
 import glob2
 import re
@@ -24,7 +20,7 @@ def load_config_measurements(experiment_dir, replicate_i):
     distance from queen & from other workers.
     '''
 
-    # Load config.json
+    ### Load config.json
     with open(experiment_dir + "/config.json", "r") as f:
         config_dict = json.load(f)
 
@@ -34,19 +30,20 @@ def load_config_measurements(experiment_dir, replicate_i):
     W = config_dict['swarm_parameters']['worker_bee_concentration']
     T = config_dict['swarm_parameters']['worker_bee_threshold']
 
-    # Load measurements.json
+    ### Load measurements.json
     with open(experiment_dir + "/data/measurements.json", "r") as f:
         measurements = json.load(f)
 
     # Pull out params of interest from measurements.json
     distance_from_queen = measurements['distance_from_queen']
     distance_from_others = measurements['distance_from_others']
+    position_history = measurements['position_history']
 
     # Create dict
     parameters = ['diffusion_coefficient', 'queen_bee_concentration',
          'worker_bee_concentration', 'worker_bee_threshold',
-         'distance_from_queen', 'distance_from_others']
-    values = [D, Q, W, T, distance_from_queen, distance_from_others]
+         'distance_from_queen', 'distance_from_others', 'position_history']
+    values = [D, Q, W, T, distance_from_queen, distance_from_others, position_history]
     experiment_dict = dict(zip([p for p in parameters], values))
     outer_dict = {"Replicate {}".format(replicate_i) : experiment_dict}
 
@@ -55,13 +52,12 @@ def load_config_measurements(experiment_dir, replicate_i):
 ########################################################################
 
 def combine_replicates(data_folders, param_set):
-
     ''' This function finds replicates of a set of parameters across
     all experiment runs. Iteratively calls the function
     "load_config_measurements" to create a dictionary for a single
     replicate. Then combine all replicates' data into a list, and write
-    to a JSON file for further data analysis. Will run this 256 times in
-    main() for 256 sets.
+    to a JSON file for further data analysis. Will run this 64 times for
+    64 sets.
     '''
 
     # List to contain all replicates
@@ -86,7 +82,7 @@ def combine_replicates(data_folders, param_set):
     truncate_name = param_set[param_set.index(start_char):]
 
     # Write the cumulative list containing all replicates to JSON
-    with open('combined_replicates_test/{}.json'.format(truncate_name), 'w') as outfile:
+    with open('combined_replicates/{}.json'.format(truncate_name), 'w') as outfile:
         json.dump(all_replicates, outfile)
 
     return None
@@ -98,14 +94,14 @@ def main():
     # d = load_config_measurements(experiment_dir, 1)
     # print(d["Replicate 1"]['worker_bee_concentration'])
 
-    # All data folders: ultimately 2560
+    # All data folders: ultimately 64 x 15
     # Modify the directory to run on particular experiments directory(ies)
-    data_folders = glob2.glob("experiments/05M_25D-05H*/*")
+    data_folders = glob2.glob("experiments/*/*")
     # print(data_folders)
 
-    # List of 256 unique sets of parameters
-    # Any of the 10 folders will contain 256 sets with same names, so choose any
-    sets_list = next(os.walk('experiments/05M_25D-01H_32M_11S/'))[1]
+    # List of 64 unique sets of parameters
+    # Any of the 15 folders will contain 64 sets with same names, so choose any
+    sets_list = next(os.walk('experiments/06M_02D-17H_41M_47S/'))[1]
     # print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above
