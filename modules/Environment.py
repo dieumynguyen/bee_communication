@@ -259,6 +259,17 @@ class Environment(Plotter):
         with open("{}/measurements.json".format(self.data_dir_path), "w") as outfile:
             json.dump(self.measurements, outfile)
 
+        # try:
+        #     with open("{}/measurements.json".format(self.data_dir_path), "r") as infile:
+        #         measurements = json.load(infile)
+        # except Exception as e:
+        #     # TODO: Debug here
+        #     # DEBUG:
+        #     # NOTE:
+        #     print("OH FUCK")
+        #     raise e
+
+
         # DM's adds
         # with open("{}/distance_to_others_history.json".format(self.data_dir_path), "w") as outfile:
         #     json.dump(self.worker_measurements, outfile)

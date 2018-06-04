@@ -31,21 +31,26 @@ def load_config_measurements(experiment_dir, replicate_i):
     T = config_dict['swarm_parameters']['worker_bee_threshold']
 
     ### Load measurements.json
-    with open(experiment_dir + "/data/measurements.json", "r") as f:
-        measurements = json.load(f)
+    try:
+        with open(experiment_dir + "/data/measurements.json", "r") as f:
+            measurements = json.load(f)
+    except Exception as e:
+        print("Function failing at: {}".format(experiment_dir))
+        raise e
 
-    # Pull out params of interest from measurements.json
-    distance_from_queen = measurements['distance_from_queen']
-    distance_from_others = measurements['distance_from_others']
-    position_history = measurements['position_history']
+    else:
+        # Pull out params of interest from measurements.json
+        distance_from_queen = measurements['distance_from_queen']
+        distance_from_others = measurements['distance_from_others']
+        position_history = measurements['position_history']
 
-    # Create dict
-    parameters = ['diffusion_coefficient', 'queen_bee_concentration',
-         'worker_bee_concentration', 'worker_bee_threshold',
-         'distance_from_queen', 'distance_from_others', 'position_history']
-    values = [D, Q, W, T, distance_from_queen, distance_from_others, position_history]
-    experiment_dict = dict(zip([p for p in parameters], values))
-    outer_dict = {"Replicate {}".format(replicate_i) : experiment_dict}
+        # Create dict
+        parameters = ['diffusion_coefficient', 'queen_bee_concentration',
+             'worker_bee_concentration', 'worker_bee_threshold',
+             'distance_from_queen', 'distance_from_others', 'position_history']
+        values = [D, Q, W, T, distance_from_queen, distance_from_others, position_history]
+        experiment_dict = dict(zip([p for p in parameters], values))
+        outer_dict = {"Replicate {}".format(replicate_i) : experiment_dict}
 
     return outer_dict
 
@@ -101,7 +106,7 @@ def main():
 
     # List of 64 unique sets of parameters
     # Any of the 15 folders will contain 64 sets with same names, so choose any
-    sets_list = next(os.walk('experiments/06M_02D-17H_41M_47S/'))[1]
+    sets_list = next(os.walk('experiments/06M_02D-19H_28M_49S/'))[1]
     # print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above
