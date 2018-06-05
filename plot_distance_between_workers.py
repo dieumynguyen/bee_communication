@@ -162,8 +162,8 @@ def plot_me(data_json):
     g.set(ylim=(0,2))
 
     ax.set(xlabel='Time', ylabel='Distance')
-    plt.title("Distance between workers over time \n (Q0.15_W0.4_D0.35_T0.4_wb1)")
-    plt.savefig('figures/distance_to_workers/Q0.15_W0.4_D0.35_T0.4_wb1.pdf')
+    plt.title("Distance between workers over time \n (Q0.15_W0.005_D0.35_T0.335_wb1)")
+    plt.savefig('figures/distance_to_workers/Q0.15_W0.005_D0.35_T0.335_wb1.pdf')
 
     return None
 
@@ -171,7 +171,7 @@ def plot_me(data_json):
 
 def main():
 
-    json_file = "Q0.15_W0.4_D0.2_T0.005_wb1.json"
+    json_file = "Q0.15_W0.005_D0.35_T0.335_wb1.json"
     plot_me(json_file)
 
 
