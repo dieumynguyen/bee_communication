@@ -8,21 +8,25 @@ import re
 ########################################################################
 def get_position_data(param_set_json):
 
-    ''' Load in each JSON created by combine_replicates.py and position_history data '''
+    ''' Load in each JSON created by combine_replicates.py and get position_history data '''
 
     with open("combined_replicates/" + param_set_json, "r") as f:
         data = json.load(f)
 
-    sample_length = len(data[0]["Replicate {}".format(1)]["position_history"])
+    # sample_length = len(data[0]["Replicate {}".format(1)]["position_history"])
 
-    all_distances = {}
+    all_replicates = []
     for j in range(len(data)):  # Loop over each replicate
 
+        # print(j)
+
+        all_distances = {}
         # Loop over 50 workers
         for i in range(1, 51):
             position = data[j]["Replicate {}".format(j+1)]["position_history"]["worker_{}".format(i)]
             all_distances["worker_{}".format(i)] = position
 
+        all_replicates.append(all_distances)
 
     # Write truncated data to JSON
     start_char = "j"
@@ -30,7 +34,7 @@ def get_position_data(param_set_json):
     name = filename[20:filename.index(start_char)]
 
     with open('position_data/{}json'.format(name), 'w') as outfile:
-        json.dump(all_distances, outfile)
+        json.dump(all_replicates, outfile)
 
     return None
 
