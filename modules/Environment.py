@@ -263,9 +263,9 @@ class Environment(Plotter):
         #     with open("{}/measurements.json".format(self.data_dir_path), "r") as infile:
         #         measurements = json.load(infile)
         # except Exception as e:
-        #     # TODO: Debug here
-        #     # DEBUG:
-        #     # NOTE:
+        #     # TO-DO: Debug here
+        #     # DE-B-UG:
+        #     # NO-TE:
         #     print("OH FUCK")
         #     raise e
 
