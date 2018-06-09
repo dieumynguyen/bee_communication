@@ -1,5 +1,7 @@
 .DS_Store
 experiments/
+figures/
+imgs/
 *.json
 *.pdf
 *.jpg
