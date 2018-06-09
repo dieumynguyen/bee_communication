@@ -370,7 +370,7 @@ function init_bee_concentration_history_vis() {
     bee_concentration_history_svg.append("text")
         .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top*0.7) + ")")
         .style("text-anchor", "middle")
-        .text("Timesteps (seconds)");
+        .text("Time (seconds)");
 
     bee_concentration_history_svg.append("g")
         .attr("class", "y_axis")
@@ -383,7 +383,7 @@ function init_bee_concentration_history_vis() {
         .attr("x", 0)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Average Worker Distance from Queen");
+        .text("Average worker distance from queen");
 
 
     // Plot!

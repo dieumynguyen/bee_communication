@@ -52,7 +52,7 @@ function initVisPlot(experiment_data) {
     svg.append("text")
         .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top*0.7) + ")")
         .style("text-anchor", "middle")
-        .text("Timesteps (seconds)");
+        .text("Time (seconds)");
 
 
     svg.append("g")
@@ -66,7 +66,7 @@ function initVisPlot(experiment_data) {
         .attr("x",0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Average Worker Distance from Queen");
+        .text("Average worker distance from queen");
 
 
     line = d3.line()

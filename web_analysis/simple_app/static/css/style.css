@@ -31,6 +31,12 @@
     word-spacing: 45px;
 }
 
+#vises {
+  position: absolute;
+  top: 150px;
+  left: 250px;
+}
+
 #experiment_selection_header_2 {
     margin: 0px;
     word-spacing: 25px;
