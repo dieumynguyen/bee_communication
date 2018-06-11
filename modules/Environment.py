@@ -161,7 +161,10 @@ class Environment(Plotter):
             "y"                     : measurement["y"],
             "found_queen_direction" : measurement["found_queen_direction"],
             # DM added scenting data for each bee
-            "scenting"              : measurement["scenting"]
+            "scenting"              : measurement["scenting"],
+            # DM added saving bias_x, bias_y data
+            "bias_x"                : measurement["bias_x"],
+            "bias_y"                : measurement["bias_y"]
         }
 
         concentration_data = measurement["concentration"]
