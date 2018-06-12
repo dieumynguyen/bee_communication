@@ -252,12 +252,12 @@ class Bee(object):
             w_b = 1
 
             # Update bias - unit vectors
-            self.bias_x = w_b * (bias_direction_x / float(magn))
-            self.bias_y = w_b * (bias_direction_y / float(magn))
+            # self.bias_x = w_b * (bias_direction_x / float(magn))
+            # self.bias_y = w_b * (bias_direction_y / float(magn))
 
             # DM: Test fixing the bias
-            # self.bias_x = 0
-            # self.bias_y = 1
+            self.bias_x = 1 / np.sqrt(2)
+            self.bias_y = 1 / np.sqrt(2)
 
         except ValueError:
             self.found_queen = True

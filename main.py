@@ -22,7 +22,7 @@ def init_factors():
     global worker_bee_concentrations
     # worker_bee_concentrations = np.linspace(0.005, 0.4, CONDITION_COUNTS["worker_concentration"])
     # worker_bee_concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.3, 0.5]
-    worker_bee_concentrations = [0.5]
+    worker_bee_concentrations = [0.3]
 
     global diffusion_coefficients
     # diffusion_coefficients = np.linspace(0.05, 0.5, CONDITION_COUNTS["diffusion_coefficient"])
@@ -31,7 +31,8 @@ def init_factors():
 
     global worker_bee_thresholds
     # worker_bee_thresholds = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_threshold"])
-    worker_bee_thresholds = [0.005, 0.5]
+    # worker_bee_thresholds = [0.005, 0.5]
+    worker_bee_thresholds = [0.05]
 
 ##################################################################################################
 
@@ -125,7 +126,7 @@ def main(run_event):
     # Directory for current experiment
 
     experiment_timestamp = datetime.datetime.now().strftime("%mM_%dD-%HH_%MM_%SS")
-    experiment_dir = "experiments/{}".format(experiment_timestamp)
+    experiment_dir = "experiments_current/{}".format(experiment_timestamp)
     if not os.path.exists(experiment_dir):
         os.mkdir(experiment_dir)
 
