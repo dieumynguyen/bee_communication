@@ -238,11 +238,12 @@ class Bee(object):
             adjusted_indices = [int(i)-1 for i in max_concentration_indices]
 
             # Assign directions to queen
+            # DM: This only gives 4 possible directions of bias; neglects when max at either x=0 or y=0
             self.directions_to_queen = { "x" : adjusted_indices[0], "y": adjusted_indices[1] }
 
             # Update bias
-            bias_direction_x = -1 if self.directions_to_queen["x"] > 0 else 1
-            bias_direction_y = -1 if self.directions_to_queen["y"] > 0 else 1
+            bias_direction_x = -1 if (self.directions_to_queen["x"] > 0) else 0 if (self.directions_to_queen["x"] == 0) else 1
+            bias_direction_y = -1 if (self.directions_to_queen["y"] > 0) else 0 if (self.directions_to_queen["y"] == 0) else 1
 
             # Vector magnitude / norm
             magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
@@ -252,12 +253,12 @@ class Bee(object):
             w_b = 1
 
             # Update bias - unit vectors
-            # self.bias_x = w_b * (bias_direction_x / float(magn))
-            # self.bias_y = w_b * (bias_direction_y / float(magn))
+            self.bias_x = w_b * (bias_direction_x / float(magn))
+            self.bias_y = w_b * (bias_direction_y / float(magn))
 
             # DM: Test fixing the bias
-            self.bias_x = 1 / np.sqrt(2)
-            self.bias_y = 1 / np.sqrt(2)
+            # self.bias_x =   0
+            # self.bias_y =   (1 / np.sqrt(2))
 
         except ValueError:
             self.found_queen = True

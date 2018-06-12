@@ -18,7 +18,7 @@ CONDITION_COUNTS = {
 }
 
 THREADS = []
-SECONDS_TO_RUN = 3   # doubled from 8
+SECONDS_TO_RUN = 16   # doubled from 8
 DELTA_T = 0.05
 DELTA_X = 0.01
 MIN_X = -3
