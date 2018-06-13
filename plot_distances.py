@@ -14,7 +14,6 @@ import glob2
 import re
 # from wand.image import Image as WImage
 
-
 ############################# STYLESHEET ###############################
 
 plt.style.use('seaborn-white')
@@ -90,17 +89,19 @@ def plot_avg_distances(data_json):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    for i, d in enumerate(data):
-        ax.plot(d, label='Swarm {}'.format(i+1))
+    colormap = mpl.cm.Set2.colors
 
-        plt.xlim(0, 160)
+    for i, d in enumerate(data):
+        ax.plot(d, label='Swarm {}'.format(i+1), color=colormap[i])
+
+        plt.xlim(0, 320)
         plt.ylim(0, 5)
 
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
         plt.xlabel('Time (step)')
         plt.ylabel('Average distance to queen')
-        plt.title('{}'.format(fig_name))
+        plt.title('Distance to queen over time \n ({})'.format(fig_name))
 
         # plt.tight_layout()
         plt.savefig("figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
@@ -115,7 +116,7 @@ def main():
     # plot_avg_distances("Q0.15_W0.4_D0.2_T0.5_wb1.json")
 
     # Iterate through all (256) JSON's and produce 1 figure each
-    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/Q0.15_W0.268*.json")))
+    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*.json")))
 
     for i, r in enumerate(reps_list):
         print("{}. Plotting average distance to queen for: {}".format(i+1, r))

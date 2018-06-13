@@ -46,8 +46,8 @@ def load_config_measurements(experiment_dir, replicate_i):
 
         # Create dict
         parameters = ['diffusion_coefficient', 'queen_bee_concentration',
-             'worker_bee_concentration', 'worker_bee_threshold',
-             'distance_from_queen', 'distance_from_others', 'position_history']
+                     'worker_bee_concentration', 'worker_bee_threshold',
+                     'distance_from_queen', 'distance_from_others', 'position_history']
         values = [D, Q, W, T, distance_from_queen, distance_from_others, position_history]
         experiment_dict = dict(zip([p for p in parameters], values))
         outer_dict = {"Replicate {}".format(replicate_i) : experiment_dict}
@@ -106,7 +106,7 @@ def main():
 
     # List of 64 unique sets of parameters
     # Any of the 15 folders will contain 64 sets with same names, so choose any
-    sets_list = next(os.walk('experiments/06M_02D-19H_28M_49S/'))[1]
+    sets_list = next(os.walk('experiments/06M_12D-20H_01M_11S/'))[1]
     # print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above
@@ -116,4 +116,5 @@ def main():
 
     return None
 
-main()
+if __name__ == '__main__':
+    main()
