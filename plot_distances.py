@@ -44,7 +44,7 @@ def standardize_filenames(fname, start_char):
 
     new_name = ""
     for i in range(len(split_list)):
-        if len(split_list[i][1:]) > 5:
+        if len(split_list[i][1:]) > 7:
             if int(split_list[i][6]) <= 5:
                 round_down = split_list[i][1:6]
                 new_name += split_list[i][0] + round_down + "_"
@@ -89,7 +89,7 @@ def plot_avg_distances(data_json):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    colormap = mpl.cm.Set2.colors
+    colormap = mpl.cm.Set3.colors
 
     for i, d in enumerate(data):
         ax.plot(d, label='Swarm {}'.format(i+1), color=colormap[i])
@@ -106,7 +106,7 @@ def plot_avg_distances(data_json):
         # plt.tight_layout()
         plt.savefig("figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
 
-    # plt.close()
+    plt.close()
 
 ########################################################################
 
