@@ -97,11 +97,11 @@ def plot_avg_distances(data_json):
         plt.xlim(0, 320)
         plt.ylim(0, 5)
 
-        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
         plt.xlabel('Time (step)')
         plt.ylabel('Average distance to queen')
-        plt.title('Distance to queen over time \n ({})'.format(fig_name))
+        plt.title('{}'.format(fig_name))
 
         # plt.tight_layout()
         plt.savefig("figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)

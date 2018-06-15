@@ -5,6 +5,7 @@ imgs/
 *.json
 *.pdf
 *.jpg
+*.jpeg
 *.png
 *.zip
 *.mov
