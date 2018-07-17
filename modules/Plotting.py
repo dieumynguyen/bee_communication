@@ -99,7 +99,8 @@ class Plotter(object):
             self.information_plot.set_yticks([])
 
             if bee.type == self.plot_bee:
-                self.concentration_history_plot.plot(bee.concentration_history, 'cyan')
+                # self.concentration_history_plot.plot(bee.concentration_history, 'cyan')
+                self.concentration_history_plot.plot(self.measurements["concentration_history"], 'cyan')
                 self.concentration_history_plot.set_title("{}".format(bee_name))
                 self.concentration_history_plot.set(xlabel='Timesteps', ylabel='Pheromone \nConcentration')
 

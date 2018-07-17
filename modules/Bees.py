@@ -20,6 +20,9 @@ class Bee(object):
         self.current_heading = 90
 
         self.x, self.y = init_position
+        # DM added 15July2018: save local map for easier analysis
+        self.local_map = []
+
         self.random_movement_active = activity["movement"]
         self.pheromone_active = activity["pheromone"]
         self.concentration = pheromone_concentration
@@ -207,7 +210,10 @@ class Bee(object):
             "found_queen_direction" : self.found_queen_direction,
             # DM added scenting data
             "scenting"              : self.scenting,
-            "type"                  : self.type
+            "type"                  : self.type,
+            # DM added 15July2018: save local map
+            "local_map"             : self.local_map
+
         }
 
 
@@ -223,51 +229,115 @@ class Bee(object):
 
 ### ------------------------------------------------------- ###
 
+    # def find_queen(self, concentration_map, x_i, y_i):
+    #     current_c = concentration_map[x_i, y_i]
+    #     local_map = concentration_map[x_i-1:x_i+2, y_i-1:y_i+2]
+    #
+    #     try:
+    #         # Get the max concentration in the local map
+    #         max_concentration = np.max(local_map[np.where(local_map > current_c)])
+    #
+    #         # Get the indicies of the max concentration
+    #         max_concentration_indices = list(np.where(local_map == max_concentration))
+    #
+    #         # Adjust the indicies to be within [-1, 1] rather than in [0, 2]
+    #         adjusted_indices = [int(i)-1 for i in max_concentration_indices]
+    #
+    #         # Assign directions to queen
+    #         # DM: This only gives 4 possible directions of bias; neglects when max at either x=0 or y=0
+    #         self.directions_to_queen = { "x" : adjusted_indices[0], "y": adjusted_indices[1] }
+    #
+    #         # Set conditions for more accurate emission when x or y is close to 0?
+    #         # Ex: if self.x <= 0.5, bias_direction_x = 0 and change sign of bias_direction_y
+    #
+    #
+    #         # Update bias
+    #         # bias_direction_x = -1 if (self.directions_to_queen["x"] > 0) else 0 if (self.directions_to_queen["x"] == 0) else 1
+    #         # bias_direction_y = -1 if (self.directions_to_queen["y"] > 0) else 0 if (self.directions_to_queen["y"] == 0) else 1
+    #         if (self.directions_to_queen["x"] > 0):
+    #             bias_direction_x = -1
+    #         elif (self.directions_to_queen["x"] == 0):
+    #             bias_direction_x = 0
+    #         else:
+    #             bias_direction_x = 1
+    #
+    #         if (self.directions_to_queen["y"] > 0):
+    #             bias_direction_y = -1
+    #         elif (self.directions_to_queen["y"] == 0):
+    #             bias_direction_y = 0
+    #         else:
+    #             bias_direction_y = 1
+    #
+    #         # Vector magnitude / norm
+    #         magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
+    #
+    #         # Define a scalar multiplier for w_x and worker_y
+    #         # Set to 1 for now
+    #         w_b = 1
+    #
+    #         # Update bias - unit vectors
+    #         self.bias_x = w_b * (bias_direction_x / float(magn))
+    #         self.bias_y = w_b * (bias_direction_y / float(magn))
+    #
+    #         # DM: Test fixing the bias
+    #         # self.bias_x =   0
+    #         # self.bias_y =   (1 / np.sqrt(2))
+    #
+    #         self.local_map = [list(ele) for ele in local_map]
+    #
+    #     except ValueError:
+    #         self.found_queen = True
+    #         self.queen_directed_movement = False
+    #
+
     def find_queen(self, concentration_map, x_i, y_i):
         current_c = concentration_map[x_i, y_i]
         local_map = concentration_map[x_i-1:x_i+2, y_i-1:y_i+2]
 
         try:
-            # Get the max concentration in the local map
-            max_concentration = np.max(local_map[np.where(local_map > current_c)])
+            ttt = np.copy(local_map)
+            ttt[1, 1] = 0
+
+            mapper = np.zeros((3, 3, 2))
+            mapper[0,:,1] = 1
+            mapper[1,:,1] = 0
+            mapper[2,:,1] = -1
+
+            mapper[:,0,0] = -1
+            mapper[:,1,0] = 0
+            mapper[:,2,0] = 1
+
 
             # Get the indicies of the max concentration
-            max_concentration_indices = list(np.where(local_map == max_concentration))
+            max_concentration_indices = np.unravel_index(ttt.argmax(), ttt.shape)
 
-            # Adjust the indicies to be within [-1, 1] rather than in [0, 2]
-            adjusted_indices = [int(i)-1 for i in max_concentration_indices]
+            vector_to_queen = mapper[max_concentration_indices]
 
-            # Assign directions to queen
-            # DM: This only gives 4 possible directions of bias; neglects when max at either x=0 or y=0
-            self.directions_to_queen = { "x" : adjusted_indices[0], "y": adjusted_indices[1] }
+            self.directions_to_queen = { "x" : vector_to_queen[0], "y": vector_to_queen[1] }
 
-            # Update bias
-            bias_direction_x = -1 if (self.directions_to_queen["x"] > 0) else 0 if (self.directions_to_queen["x"] == 0) else 1
-            bias_direction_y = -1 if (self.directions_to_queen["y"] > 0) else 0 if (self.directions_to_queen["y"] == 0) else 1
-
-            # Vector magnitude / norm
-            magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
+            vector_away_from_queen = -vector_to_queen
 
             # Define a scalar multiplier for w_x and worker_y
             # Set to 1 for now
             w_b = 1
 
             # Update bias - unit vectors
-            self.bias_x = w_b * (bias_direction_x / float(magn))
-            self.bias_y = w_b * (bias_direction_y / float(magn))
+            self.bias_x = vector_away_from_queen[0] / np.linalg.norm(vector_away_from_queen)
+            self.bias_y = vector_away_from_queen[1] / np.linalg.norm(vector_away_from_queen)
 
-            # DM: Test fixing the bias
-            # self.bias_x =   0
-            # self.bias_y =   (1 / np.sqrt(2))
+            self.local_map = [list(ele) for ele in local_map]
 
         except ValueError:
             self.found_queen = True
             self.queen_directed_movement = False
 
+
 ################################### CLASS: SWARM #######################################
 
 class Swarm(object):
     def __init__(self, num_workers, queen_bee_concentration, worker_bee_concentration, worker_bee_threshold, delta_t, delta_x, min_x, max_x, emission_periods, queen_movement_params, worker_plot_dir, rotate_bees_ON, random_positions):
+
+        WORKER_BEE_MOVEMENT = False
 
         queen_data = {
             "init_position"             : (0, 0),       # DM: Move queen up for bias test
@@ -310,7 +380,7 @@ class Swarm(object):
             "pheromone_concentration"   : worker_bee_concentration,
             "activation_threshold"      : worker_bee_threshold,
             "activity"                  : {
-                "movement"  : True,
+                "movement"  : WORKER_BEE_MOVEMENT,
                 "pheromone" : False
             },
             "movement"                  : (0.001, 0.001),

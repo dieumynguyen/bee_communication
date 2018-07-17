@@ -164,7 +164,9 @@ class Environment(Plotter):
             "scenting"              : measurement["scenting"],
             # DM added saving bias_x, bias_y data
             "bias_x"                : measurement["bias_x"],
-            "bias_y"                : measurement["bias_y"]
+            "bias_y"                : measurement["bias_y"],
+            # DM added 15July2018: save local map
+            "local_map"             : measurement["local_map"]
         }
 
         concentration_data = measurement["concentration"]
@@ -252,7 +254,7 @@ class Environment(Plotter):
         # Save data
         # ------------------------------------------------------------
         self._save_measurement_data()
-        # self._save_concentration_map() # DM commnted out
+        self._save_concentration_map() # DM commnted out
         # ------------------------------------------------------------
 
         if self.plotting_on:
