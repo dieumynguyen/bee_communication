@@ -1,13 +1,13 @@
 RANDOM_SEED = 42
 
 TESTING = False      # Testing with one set of parameters
-PLOTTING_ON = True
-REAL_TIME_VISUALIZATION = True
+PLOTTING_ON = False
+REAL_TIME_VISUALIZATION = False
 
 THREADING_ON = True
 NUM_ITERATIONS_PER_EXPERIMENTAL_CONDITION = 1 # Ideally, 10
 
-NUM_WORKERS = 1
+NUM_WORKERS = 4
 RANDOM_BEE_POSITIONS = False # If False, reads from bee_positions.txt
 
 CONDITION_COUNTS = {
@@ -18,7 +18,7 @@ CONDITION_COUNTS = {
 }
 
 THREADS = []
-SECONDS_TO_RUN = 1   # doubled from 8
+SECONDS_TO_RUN = 2  # doubled from 8
 DELTA_T = 0.05
 DELTA_X = 0.01
 MIN_X = -3
