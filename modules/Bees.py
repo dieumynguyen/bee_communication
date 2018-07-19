@@ -178,9 +178,11 @@ class Bee(object):
                 # DM added scenting data for single bees
                 # self.scenting = True
 
-        # look for queen
-        if not self.type == "queen":
-            self.find_queen(concentration_map, x_i, y_i)
+        # DM indented 18July2018: emit in 1 direction for duration of scenting
+        # so that bias_x and bias_y constant during that time
+            # look for queen
+            if not self.type == "queen":
+                self.find_queen(concentration_map, x_i, y_i)
 
         self.update()
 
@@ -240,6 +242,30 @@ class Bee(object):
             # Get the indicies of the max concentration
             max_concentration_indices = list(np.where(local_map == max_concentration))
 
+            ########### DM 18July2018: Fix adjusted indicies ##############
+            # max_concentration_indices_tup = tuple([int(index) for index in max_concentration_indices])
+
+            # Dictionary of original indices : adjusted indices
+            # mapping_dict = {
+            #                 (0,0): (-1,1),
+            #                 (1,0): (-1,0),
+            #                 (2,0): (-1,-1),
+            #                 (0,1): (0,1),
+            #                 (1,1): (0,0),
+            #                 (2,1): (0,-1),
+            #                 (0,2): (1,1),
+            #                 (1,2): (1, 0),
+            #                 (2,2): (1,-1),
+            #                }
+
+            # adjusted_indices = (0,0)
+            # if max_concentration_indices_tup in mapping_dict.keys():
+            #     adjusted_indices =  mapping_dict[max_concentration_indices_tup]
+            #     # print(adjusted_indices)
+
+            ########### End DM's add ##############
+
+
             # Adjust the indicies to be within [-1, 1] rather than in [0, 2]
             adjusted_indices = [int(i)-1 for i in max_concentration_indices]
 
@@ -254,19 +280,28 @@ class Bee(object):
             # Update bias
             # bias_direction_x = -1 if (self.directions_to_queen["x"] > 0) else 0 if (self.directions_to_queen["x"] == 0) else 1
             # bias_direction_y = -1 if (self.directions_to_queen["y"] > 0) else 0 if (self.directions_to_queen["y"] == 0) else 1
-            if (self.directions_to_queen["x"] > 0):
-                bias_direction_x = -1
-            elif (self.directions_to_queen["x"] == 0):
-                bias_direction_x = 0
+            # DM edited 18July2018: Added conditions that if x_i or y_i near queen (300,300),
+            # let them emit without angle
+            if x_i <= 305 and x_i >= 295:
+                    bias_direction_x = 0
             else:
-                bias_direction_x = 1
+                if (self.directions_to_queen["x"] > 0):
+                    bias_direction_x = -1
+                elif (self.directions_to_queen["x"] == 0):
+                    bias_direction_x = 0
+                else:
+                    bias_direction_x = 1
 
-            if (self.directions_to_queen["y"] > 0):
-                bias_direction_y = -1
-            elif (self.directions_to_queen["y"] == 0):
-                bias_direction_y = 0
+            ### for y ###
+            if y_i <= 305 and y_i >= 295:
+                    bias_direction_y = 0
             else:
-                bias_direction_y = 1
+                if (self.directions_to_queen["y"] > 0):
+                    bias_direction_y = -1
+                elif (self.directions_to_queen["y"] == 0):
+                    bias_direction_y = 0
+                else:
+                    bias_direction_y = 1
 
             # Vector magnitude / norm
             magn = np.sqrt(bias_direction_x**2 + bias_direction_y**2) + 1e-9
@@ -290,7 +325,7 @@ class Bee(object):
             self.queen_directed_movement = False
 
 
-    # Michael's edit 16July2018
+    # # Michael's edit 16July2018
     # def find_queen(self, concentration_map, x_i, y_i):
     #     current_c = concentration_map[x_i, y_i]
     #     local_map = concentration_map[x_i-1:x_i+2, y_i-1:y_i+2]
