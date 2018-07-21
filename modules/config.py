@@ -7,7 +7,7 @@ REAL_TIME_VISUALIZATION = False
 THREADING_ON = True
 NUM_ITERATIONS_PER_EXPERIMENTAL_CONDITION = 1 # Ideally, 10
 
-NUM_WORKERS = 8
+NUM_WORKERS = 4
 RANDOM_BEE_POSITIONS = False # If False, reads from bee_positions.txt
 
 CONDITION_COUNTS = {
@@ -18,12 +18,12 @@ CONDITION_COUNTS = {
 }
 
 THREADS = []
-SECONDS_TO_RUN = 2  # doubled from 8
+SECONDS_TO_RUN = 3  # doubled from 8
 DELTA_T = 0.05
 DELTA_X = 0.01
 MIN_X = -3
 MAX_X = 3
-w_b = 1
+w_b = 3
 
 ROTATE_BEES_ON = False
 DIFFUSION_COEFFICIENT = 0.5 # Used for TESTING
