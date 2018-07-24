@@ -101,12 +101,12 @@ def main():
 
     # All data folders: ultimately 64 x 15
     # Modify the directory to run on particular experiments directory(ies)
-    data_folders = glob2.glob("full_experiments/*/*")
+    data_folders = glob2.glob("experiments/*/*")
     # print(data_folders)
 
     # List of 64 unique sets of parameters
     # Any of the 15 folders will contain 64 sets with same names, so choose any
-    sets_list = next(os.walk('full_experiments/06M_13D-14H_36M_17S/'))[1]
+    sets_list = next(os.walk('experiments/07M_21D-16H_48M_15S/'))[1]
     # print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above
