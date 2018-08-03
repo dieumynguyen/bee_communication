@@ -82,6 +82,7 @@ def plot_avg_distances(data_json):
 
     # Standardize file names
     fname = f.name
+    # fname = f.name.replace("wb1", "wb3")
     start_char = "j"
     fig_name = standardize_filenames(fname, start_char)
 
@@ -104,7 +105,7 @@ def plot_avg_distances(data_json):
         plt.title('{}'.format(fig_name))
 
         # plt.tight_layout()
-        plt.savefig("figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
+        plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
 
     plt.close()
 

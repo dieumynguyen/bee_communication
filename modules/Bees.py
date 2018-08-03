@@ -128,7 +128,8 @@ class Bee(object):
                 # ========================================================================
 
                 # Update position to head in direction of queen
-                steps = np.random.randint(1, 4)
+                steps = np.random.randint(1, 6)
+
                 self.x += self.directions_to_queen["x"]*self.delta_x*steps
                 self.y += self.directions_to_queen["y"]*self.delta_x*steps
 
@@ -148,26 +149,49 @@ class Bee(object):
             self.__dict__[direction] += sign*self.delta_x*steps
 
             if self.__dict__[direction] <= self.min_x:
-                self.__dict__[direction] += self.delta_x
+                self.__dict__[direction] += self.delta_x*steps
 
             elif self.__dict__[direction] >= self.max_x:
-                self.__dict__[direction] -= self.delta_x
+                self.__dict__[direction] -= self.delta_x*steps
 
         # Constrain x and y to bounds of space (self.min_x, self.max_x)
         # ------------------------------------------------------------
+        # DM edited 01Aug2018: + = like above so workers aren't stuck
         for dimension in ["x", "y"]:
-            if self.__dict__[dimension] < self.min_x:
-                self.__dict__[dimension] = self.min_x
-            elif self.__dict__[dimension] > self.max_x:
-                self.__dict__[dimension] = self.max_x
+            if self.__dict__[dimension] <= self.min_x:
+                # self.__dict__[dimension] = self.min_x
+                self.__dict__[dimension] += self.delta_x*2
+            elif self.__dict__[dimension] >= self.max_x:
+                # self.__dict__[dimension] = self.max_x
+                self.__dict__[dimension] -= self.delta_x*2
         # ------------------------------------------------------------
 
 ### ------------------------------------------------------- ###
 
     def sense_environment(self, concentration_map, x_i, y_i):
-        # If they already found the queen, do nothing
+
+        ### TOMORROW:
+        # Try using return to see which bees freeze
+        # Why are bees disappearing when they're constrained?
+
+        # If empty local map... then walk
         if self.found_queen:
-            return
+            # Pick direction, sign, and magnitude
+            direction = "x" if np.random.uniform() < 0.5 else "y"
+            sign = 1 if np.random.uniform() < 0.5 else -1
+            steps = 5
+
+            # Constrain movement to board (self.x and self.y here)
+            self.__dict__[direction] += sign*self.delta_x*steps
+
+            if self.__dict__[direction] <= self.min_x:
+                self.__dict__[direction] += self.delta_x*steps
+
+            elif self.__dict__[direction] >= self.max_x:
+                self.__dict__[direction] -= self.delta_x*steps
+
+
+            # return
 
         # Check if worker will be activated
         if not self.pheromone_active:
@@ -182,6 +206,7 @@ class Bee(object):
         # so that bias_x and bias_y constant during that time
             # look for queen
             if not self.type == "queen":
+
                 self.find_queen(concentration_map, x_i, y_i)
 
         self.update()
@@ -232,12 +257,19 @@ class Bee(object):
 ### ------------------------------------------------------- ###
 
     def find_queen(self, concentration_map, x_i, y_i):
+
         current_c = concentration_map[x_i, y_i]
         local_map = concentration_map[x_i-1:x_i+2, y_i-1:y_i+2]
 
         try:
             # Get the max concentration in the local map
             max_concentration = np.max(local_map[np.where(local_map > current_c)])
+                # print(max_concentration, type(max_concentration))
+            # except ValueError:
+            #     # self.found_queen = True # do nothing; that's why some bees freeze at edges?
+            #     # self.queen_directed_movement = True
+            #     max_concentration = local_map[np.where(local_map == current_c)]
+            #     print(max_concentration, type(max_concentration))
 
             # Get the indicies of the max concentration
             max_concentration_indices = list(np.where(local_map == max_concentration))
@@ -363,9 +395,9 @@ class Bee(object):
     #
     #         self.local_map = [list(ele) for ele in local_map]
     #
-    #     except ValueError:
-    #         self.found_queen = True
-    #         self.queen_directed_movement = False
+    # except ValueError:
+    #     self.found_queen = True
+    #     self.queen_directed_movement = False
 
 
 ################################### CLASS: SWARM #######################################
@@ -392,6 +424,8 @@ class Swarm(object):
 
         bees = {"queen" : queen_data}
 
+        # DM 01Aug2018: keep random positions constant across experiments for testing
+        np.random.seed(10)
         if random_positions:
             # Randomly set step size for each bee, between the min and max
             position = lambda : np.random.uniform(min_x, max_x)
