@@ -21,18 +21,22 @@ def init_factors():
 
     global worker_bee_concentrations
     # worker_bee_concentrations = np.linspace(0.005, 0.4, CONDITION_COUNTS["worker_concentration"])
-    # worker_bee_concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
-    worker_bee_concentrations = [0.05]
+    worker_bee_concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+    # worker_bee_concentrations = [0.005]
 
     global diffusion_coefficients
     # diffusion_coefficients = np.linspace(0.05, 0.5, CONDITION_COUNTS["diffusion_coefficient"])
-    # diffusion_coefficients = [0.05, 0.15, 0.25, 0.35, 0.45, 0.55]
-    diffusion_coefficients = [0.35]
+    diffusion_coefficients = [0.005, 0.01, 0.05, 0.1, 0.5, 1.0]
+    # diffusion_coefficients = [1]
 
     global worker_bee_thresholds
     # worker_bee_thresholds = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_threshold"])
-    # worker_bee_thresholds = [0.005, 0.5]
-    worker_bee_thresholds = [0.01]
+    worker_bee_thresholds = [0.005, 0.5]
+    # worker_bee_thresholds = [0.005]
+
+    # DM added 18Aug2018
+    global emission_bias # w_b
+    emission_bias = [3]
 
 ##################################################################################################
 
@@ -63,7 +67,6 @@ def run_experiment(run_event, experiment_i, Q, W, D, T, wb, experiment_iteration
         "delta_x"                   : spatiotemporal_parameters["spatial"]["delta_x"],
         "min_x"                     : spatiotemporal_parameters["spatial"]["min_x"],
         "max_x"                     : spatiotemporal_parameters["spatial"]["max_x"],
-        # "w_b"                       : spatiotemporal_parameters["spatial"]["w_b"],
         "emission_periods"          : {
             "queen"     : queen_bee_params["emission_period"],
             "worker"    : worker_bee_params["emission_period"]
@@ -96,7 +99,7 @@ def run_experiment(run_event, experiment_i, Q, W, D, T, wb, experiment_iteration
 
     # ---------------------------------------------------------------------------
 
-    # Pass in dict of swam parameters (**kwargs) into Swarm module
+    # Pass in dict of swarm parameters (**kwargs) into Swarm module
     # Pass in environment parameters
 
     swarm = Swarm(**swarm_parameters)
@@ -112,7 +115,6 @@ def main(run_event):
             "min_x"     : MIN_X,
             "max_x"     : MAX_X,
             "delta_x"   : DELTA_X,
-            # "w_b"       : w_b
         },
         "temporal"  : {
             "start_t"   : 0,
@@ -166,7 +168,7 @@ def main(run_event):
             "W"                         : 0.005,
             "D"                         : 0.5,
             "T"                         : 0.02,
-            "wb"                        : 1,
+            "wb"                        : 1
         }
         run_experiment(**experiment_params)     # pass in dict of parameters
 
@@ -180,21 +182,21 @@ def main(run_event):
         experiment_i = 0
 
         # DM added variables for labeling experiments with parameters
-        Q = 0
-        W = 0
-        D = 0
-        T = 0
-        wb = 1
+        # Q = 0
+        # W = 0
+        # D = 0
+        # T = 0
+        wb = emission_bias[0]
         # End DM's adds
 
         for queen_bee_concentration in queen_bee_concentrations:
-            Q = queen_bee_concentration           # DM
+            # Q = queen_bee_concentration           # DM
             for worker_bee_concentration in worker_bee_concentrations:
-                W = worker_bee_concentration      # DM
+                # W = worker_bee_concentration      # DM
                 for diffusion_coefficient in diffusion_coefficients:
-                    D = diffusion_coefficient     # DM
+                    # D = diffusion_coefficient     # DM
                     for worker_bee_threshold in worker_bee_thresholds:
-                        T = worker_bee_threshold  # DM
+                        # T = worker_bee_threshold  # DM
                         for experiment_condition_iteration in range(NUM_ITERATIONS_PER_EXPERIMENTAL_CONDITION):
 
                             if not run_event.is_set():
@@ -215,10 +217,10 @@ def main(run_event):
                             experiment_params = {
                                 "run_event"                 : run_event,
                                 "experiment_i"              : experiment_i,
-                                "Q"                         : Q,
-                                "W"                         : W,
-                                "D"                         : D,
-                                "T"                         : T,
+                                "Q"                         : queen_bee_concentration,
+                                "W"                         : worker_bee_concentration,
+                                "D"                         : diffusion_coefficient,
+                                "T"                         : worker_bee_threshold,
                                 "wb"                        : wb,
                                 "experiment_iteration"      : experiment_condition_iteration,
                                 "experiment_dir"            : experiment_dir,

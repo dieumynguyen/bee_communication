@@ -68,8 +68,8 @@ var COLORMAPS = {
             // enter n keys between 0 and 1 here
             // for gradient color customization
             '.4'  : 'green',
-            '.75' : '#ffeb99',
-            '.95' : '#ff0000'
+            '0.75' : '#ffeb99',
+            '0.95' : '#ff0000'
         },
         "queen"         : "static/icons/queen_bee.png",
         "worker"        : "static/icons/worker_bee.png",

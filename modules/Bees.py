@@ -154,7 +154,7 @@ class Bee(object):
             elif self.__dict__[direction] >= self.max_x:
                 self.__dict__[direction] -= self.delta_x*steps
 
-        # Constrain x and y to bounds of space (self.min_x, self.max_x)
+        # Constrain x and y to bounds of space (self.min_x, self.max_x) for activated bees
         # ------------------------------------------------------------
         # DM edited 01Aug2018: + = like above so workers aren't stuck
         for dimension in ["x", "y"]:
@@ -264,6 +264,10 @@ class Bee(object):
         try:
             # Get the max concentration in the local map
             max_concentration = np.max(local_map[np.where(local_map > current_c)])
+
+            # if max_concentration >= 1:
+            #     print(max_concentration)
+
                 # print(max_concentration, type(max_concentration))
             # except ValueError:
             #     # self.found_queen = True # do nothing; that's why some bees freeze at edges?
@@ -273,6 +277,10 @@ class Bee(object):
 
             # Get the indicies of the max concentration
             max_concentration_indices = list(np.where(local_map == max_concentration))
+            max_concentration_indices = [max_concentration_indices[0][0], max_concentration_indices[1][0]]
+
+            # print(max_concentration_indices)
+            # print(max_concentration_indices[1][0])
 
             ########### DM 18July2018: Fix adjusted indicies ##############
             # max_concentration_indices_tup = tuple([int(index) for index in max_concentration_indices])
@@ -340,7 +348,8 @@ class Bee(object):
 
             # Define a scalar multiplier for w_x and worker_y
             # Set to 1 for now
-            w_b = 1
+            # 21Aug2018 - fix hardcode
+            w_b = 3
 
             # Update bias - unit vectors
             self.bias_x = w_b * (bias_direction_x / float(magn))
@@ -352,7 +361,7 @@ class Bee(object):
 
             self.local_map = [list(ele) for ele in local_map]
 
-        except ValueError:
+        except ValueError or TypeError:
             self.found_queen = True
             self.queen_directed_movement = False
 

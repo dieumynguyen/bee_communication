@@ -18,12 +18,11 @@ CONDITION_COUNTS = {
 }
 
 THREADS = []
-SECONDS_TO_RUN = 4 # doubled from 8
+SECONDS_TO_RUN = 16 # doubled from 8
 DELTA_T = 0.05
 DELTA_X = 0.01
 MIN_X = -3
 MAX_X = 3
-w_b = 1
 
 ROTATE_BEES_ON = False
 DIFFUSION_COEFFICIENT = 0.5 # Used for TESTING

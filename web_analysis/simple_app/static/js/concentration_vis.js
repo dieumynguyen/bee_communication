@@ -23,7 +23,7 @@ function initConcentrationVis(backend_results) {
     var config = {
         container       : document.getElementById('concentration_div'),
         radius          : 10,
-        maxOpacity      : 0.7,
+        maxOpacity      : 0.7, // was 0.7
         minOpacity      : 0,
         blur            : 0.75,
         backgroundColor : SELECTED_COLORMAP.background,
