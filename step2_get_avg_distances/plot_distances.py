@@ -93,19 +93,20 @@ def plot_avg_distances(data_json):
     colormap = mpl.cm.Set3.colors
 
     for i, d in enumerate(data):
-        ax.plot(d, label='Swarm {}'.format(i+1), color=colormap[i])
+        if i <= 10:
+            ax.plot(d, label='Swarm {}'.format(i+1), color=colormap[i])
 
-        plt.xlim(0, 320)
-        plt.ylim(0, 5)
+            plt.xlim(0, 320)
+            plt.ylim(0, 5)
 
-        # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
-        plt.xlabel('Time (step)')
-        plt.ylabel('Average distance to queen')
-        plt.title('{}'.format(fig_name))
+            plt.xlabel('Time (step)')
+            plt.ylabel('Average distance to queen')
+            plt.title('{}'.format(fig_name))
 
-        # plt.tight_layout()
-        plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
+            # plt.tight_layout()
+            plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
 
     plt.close()
 
