@@ -12,14 +12,13 @@ import plotly.graph_objs as go
 import os
 import glob2
 import re
+import os
 # from wand.image import Image as WImage
 
-############################# STYLESHEET ###############################
+# ############################# STYLESHEET ###############################
 
 plt.style.use('seaborn-white')
-
-plt.rcParams['font.sans-serif'] = "Tahoma"
-plt.rcParams['font.family'] = "sans-serif"
+plt.rcParams['font.sans-serif'] = "Arial"
 plt.rcParams['font.size'] = 14
 plt.rcParams['axes.labelsize'] = 14
 plt.rcParams['axes.labelweight'] = 'normal'
@@ -27,103 +26,91 @@ plt.rcParams['xtick.labelsize'] = 14
 plt.rcParams['ytick.labelsize'] = 14
 plt.rcParams['legend.fontsize'] = 10
 plt.rcParams['figure.titlesize'] = 14
-plt.rcParams['lines.linewidth'] = 2
-params = {"ytick.color" : "#535956",
-          "xtick.color" : "#535956",
-          "axes.labelcolor" : "#535956",
-          "axes.edgecolor" : "#535956",
-          "text.color": "#535956"}
+plt.rcParams['lines.linewidth'] = 1
+params = {"ytick.color" : "#000000",
+          "xtick.color" : "#000000",
+          "axes.labelcolor" : "#000000",
+          "axes.edgecolor" : "#000000",
+          "text.color": "#000000"}
 plt.rcParams.update(params)
 
 ########################################################################
 
-def standardize_filenames(fname, start_char):
-    fig_name = fname[18:fname.index(start_char)-1]
-    split_list = fig_name.split("_")
-    # print(split_list)
+def standardize_filenames(fname):
+    # fname = "Q0.15_W0.0005_D0.5_T0.005_wb1.json"
+    split_list = fname.split("_")
 
     new_name = ""
-    for i in range(len(split_list)):
-        if len(split_list[i][1:]) > 7:
-            if int(split_list[i][6]) <= 5:
-                round_down = split_list[i][1:6]
-                new_name += split_list[i][0] + round_down + "_"
-                # print(round_down)
-            else:
-                round_up = str(float(split_list[i][1:6]) + 0.001)
-                new_name += split_list[i][0] + round_up + "_"
-                # print(round_up)
-
+    for item in split_list:
+        if "Q" in item:
+            new_name += item + "_"
+        elif "W" in item and len(item) < 7:
+            new_length = 7 - len(item)
+            new_name += item + "0"*new_length + "_"
+        elif "D" in item and len(item) < 6:
+            new_length = 6 - len(item)
+            new_name += item + "0"*new_length + "_"
+        elif "T" in item and len(item) < 7:
+            new_length = 7 - len(item)
+            new_name += item + "0"*new_length + "_"
+        elif "wb" in item:
+            new_name += item
         else:
-            new_name += split_list[i] + "_"
-
-    # print(new_name)
-
-    if new_name[-1] == "_":
-        new_name = new_name[:-1]
-
-    # print(new_name)
+            new_name += item + "_"
 
     return new_name
 
 ########################################################################
 
-def plot_avg_distances(data_json):
-
-    ''' For each replicate in a set of parameters, open that cumulative
-    JSON and plot each replicate as a line in a single plot.
-    '''
-
-    with open("avg_distance_data/" + data_json, "r") as f:
-        data = json.load(f)
-
-    fig = plt.figure()
-    ax = plt.axes([0.1, 0.1, 0.6, 0.75])  # try
-
-    # Standardize file names
-    fname = f.name
-    # fname = f.name.replace("wb1", "wb3")
-    start_char = "j"
-    fig_name = standardize_filenames(fname, start_char)
-
-    # Plotting
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-
-    colormap = mpl.cm.Set3.colors
-
-    for i, d in enumerate(data):
-        if i <= 10:
-            ax.plot(d, label='Swarm {}'.format(i+1), color=colormap[i])
-
-            plt.xlim(0, 320)
-            plt.ylim(0, 5)
-
-            # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-
-            plt.xlabel('Time (step)')
-            plt.ylabel('Average distance to queen')
-            plt.title('{}'.format(fig_name))
-
-            # plt.tight_layout()
-            plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/{}.pdf".format(fig_name), transparent=True)
-
-    plt.close()
-
-########################################################################
-
 def main():
 
-    # Test on 1 json
-    # plot_avg_distances("Q0.15_W0.4_D0.2_T0.5_wb1.json")
+    # Standardize filenames
+    path = '/Users/dieumynguyen/Desktop/Projects/bee_communication/step2_get_avg_distances/avg_distance_data'
+    files = os.listdir(path)
+    for file in files:
+        os.rename(os.path.join(path, file), os.path.join(path, standardize_filenames(file)))
 
-    # Iterate through all (256) JSON's and produce 1 figure each
-    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*.json")))
+    # Get list of files in correct order
+    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*T0.5*.json")))
+    reps_list = reps_list[::-1]
+    updated_reps_list = sorted(reps_list, key = lambda x: (x.split("_")[1], x[2]))[::-1]
 
-    for i, r in enumerate(reps_list):
-        print("{}. Plotting average distance to queen for: {}".format(i+1, r))
-        plot_avg_distances(r)
+    # Start plotting!
+    fig, axes = plt.subplots(7, 6, sharex=True, sharey=True, figsize=(20,20))
 
+    # Plot subplots
+    for j, ax in enumerate(axes.flatten()):
+        with open("avg_distance_data/" + updated_reps_list[j], "r") as f:
+            data = json.load(f)
+        fname = f.name[24:-5]
+
+        colormap = mpl.cm.tab20c.colors
+        for i, d in enumerate(data):
+            if i < 10:
+                ax.plot(d, label='Swarm {}'.format(i+1), color=colormap[i])
+
+                ax.xaxis.set_major_locator(plt.MaxNLocator(4))
+                ax.yaxis.set_major_locator(plt.MaxNLocator(5))
+
+                ax.spines['right'].set_visible(False)
+                ax.spines['top'].set_visible(False)
+
+                plt.xlim(0, 320)
+                plt.ylim(0, 5)
+                ax.set_title('{}'.format(fname), fontsize=10)
+
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(handles, labels, loc=7, fontsize=15, borderpad=0.5)
+
+    ax = fig.add_subplot(111, frameon=False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xlabel('Time (step)', labelpad=30, fontsize=20) # Use argument `labelpad` to move label downwards.
+    ax.set_ylabel('Average distance to queen', labelpad=25, fontsize=20)
+
+    fig.subplots_adjust(wspace=0.15, hspace=0.2)
+
+    plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/Threshold0.5_DistanceToQueen.pdf", transparent=True)
 
 if __name__ == '__main__':
     main()

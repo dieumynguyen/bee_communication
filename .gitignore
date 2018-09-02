@@ -2,6 +2,7 @@
 experiments/
 figures/
 imgs/
+slides/
 *.json
 *.pdf
 *.jpg
