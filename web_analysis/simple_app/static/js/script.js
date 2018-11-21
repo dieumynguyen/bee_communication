@@ -226,9 +226,11 @@ function loadExperimentFolderData() {
     });
 }
 
+
 function initializerUserInterface() {
     var body = d3.select("body");
     getExperimentFolders();
+    palette(0, 6);
 }
 
 $(function() {

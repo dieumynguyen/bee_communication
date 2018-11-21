@@ -71,7 +71,7 @@ def main():
         os.rename(os.path.join(path, file), os.path.join(path, standardize_filenames(file)))
 
     # Get list of files in correct order
-    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*T0.5*.json")))
+    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*T0.005*.json")))
     reps_list = reps_list[::-1]
     updated_reps_list = sorted(reps_list, key = lambda x: (x.split("_")[1], x[2]))[::-1]
 
@@ -99,9 +99,11 @@ def main():
                 plt.ylim(0, 5)
                 ax.set_title('{}'.format(fname), fontsize=10)
 
+    # Add one legend
     handles, labels = ax.get_legend_handles_labels()
     fig.legend(handles, labels, loc=7, fontsize=15, borderpad=0.5)
 
+    # Add x and y labels for all
     ax = fig.add_subplot(111, frameon=False)
     ax.set_xticks([])
     ax.set_yticks([])
@@ -110,7 +112,8 @@ def main():
 
     fig.subplots_adjust(wspace=0.15, hspace=0.2)
 
-    plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/Threshold0.5_DistanceToQueen.pdf", transparent=True)
+    # Save figure as a single pdf
+    plt.savefig("/Users/dieumynguyen/Desktop/Projects/bee_communication/figures/distance_to_queen/Threshold0.005_DistanceToQueen.pdf", transparent=True)
 
 if __name__ == '__main__':
     main()

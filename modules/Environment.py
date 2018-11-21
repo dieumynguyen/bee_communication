@@ -13,7 +13,7 @@ from matplotlib.colors import ListedColormap
 from modules.Bees import Bee
 
 from modules.Bees import Swarm
-from modules.Plotting import Plotter
+from modules.Plotting_test import Plotter
 
 class Environment(Plotter):
     def __init__(self, bees, diffusion_coefficient, spatiotemporal_parameters, plot_params, data_dir_path, real_time_visualization, plotting_on):

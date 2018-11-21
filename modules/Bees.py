@@ -62,6 +62,9 @@ class Bee(object):
         # History information
         self.plot_dir = plot_dir
 
+        # Nov19
+        self.reactivate_pheromone = False
+
 ### ------------------------------------------------------- ###
 
     def rotate_bees(self):
@@ -114,6 +117,7 @@ class Bee(object):
                 # DM: try adding scenting data here
                 self.scenting = True
 
+            # Must reset scenting somehow to not freeze the bees
             else:
                 # Waited long enough; Enable movement toward queen
                 self.queen_directed_movement = True
@@ -139,11 +143,10 @@ class Bee(object):
 
         # If random movement active, determine new movement behavior
         elif self.random_movement_active:
-
             # Pick direction, sign, and magnitude
             direction = "x" if np.random.uniform() < 0.5 else "y"
             sign = 1 if np.random.uniform() < 0.5 else -1
-            steps = np.random.randint(1, 6)
+            steps = np.random.randint(1, 10)  # 2018-09-26 change back later to 10
 
             # Constrain movement to board (self.x and self.y here)
             self.__dict__[direction] += sign*self.delta_x*steps
@@ -206,10 +209,31 @@ class Bee(object):
         # so that bias_x and bias_y constant during that time
             # look for queen
             if not self.type == "queen":
-
                 self.find_queen(concentration_map, x_i, y_i)
 
         self.update()
+
+        # # Nov 19: try to make bees emit more than once, whenever threshold is met
+        # # this works to activate workers as long as threshold is met
+        # if self.found_queen_direction:
+        #     if concentration_map[x_i, y_i] >= self.activation_threshold:
+        #         self.pheromone_emission_timestep = 1
+        #         self.num_timesteps_waited = 0
+        #         self.activate_pheromones()
+        #     # self.found_queen_direction = True
+        #
+        #     # Reset scenting
+        #     # self.num_timesteps_waited = 0
+        #     # self.pheromone_emission_timestep = 0
+        #
+        #     # print("\n {} \n".format(self.num_timesteps_waited))
+        #     #
+        #     if not self.type == "queen":
+        #         self.find_queen(concentration_map, x_i, y_i)
+        #
+        #     self.update()
+
+        # self.update()
 
 ### ------------------------------------------------------- ###
 
@@ -219,13 +243,21 @@ class Bee(object):
         # DM: Try distinguishing queen vs workers for these so
         # queen emits every x emission_period while workers only once
         # This works!
-        emitting = False
+        emitting = False   # TESTING NOV 19
         if self.type == "queen":
             emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
         else:
-            emitting = self.pheromone_emission_timestep <= self.emission_period
-            # if self.pheromone_emission_timestep <= self.emission_period:
-            #     emitting = True
+            # emitting = self.pheromone_emission_timestep <= self.emission_period
+            # emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
+            if self.pheromone_emission_timestep <= self.emission_period:
+                emitting = True
+            # Nov20: This might've worked to make scenting multiple times
+            # But msut check if movement when threshold isn't met is correct
+            else: # Nov19 to control for multiple scentings... Reset when scenting is done for 1 period
+                emitting = False
+                self.pheromone_active = False
+                self.pheromone_emission_timestep = 1
+                self.num_timesteps_waited = 0
 
         bee_info = {
             "x"                     : self.x,
@@ -437,8 +469,13 @@ class Swarm(object):
         np.random.seed(10)
         if random_positions:
             # Randomly set step size for each bee, between the min and max
-            position = lambda : np.random.uniform(min_x, max_x)
-            new_position = lambda bee_i : (position(), position())
+            # To put in corner: -2.8, -1.8
+            x_position = lambda : np.random.uniform(-3, 3)
+            # DM test
+            # To put in corner: 1.8, 2.8
+            y_position = lambda : np.random.uniform(-3, 3)
+
+            new_position = lambda bee_i : (x_position(), y_position())
         else:
             def new_position(bee_i):
                 with open("bee_positions.txt", "r") as infile:
