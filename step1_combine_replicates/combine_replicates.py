@@ -87,7 +87,7 @@ def combine_replicates(data_folders, param_set):
     truncate_name = param_set[param_set.index(start_char):]
 
     # Write the cumulative list containing all replicates to JSON
-    with open('combined_replicates/{}.json'.format(truncate_name), 'w') as outfile:
+    with open('/Users/dieumynguyen/Desktop/Projects/bee_communication/step1_combine_replicates/combined_replicates/{}.json'.format(truncate_name), 'w') as outfile:
         json.dump(all_replicates, outfile)
 
     return None
@@ -101,12 +101,12 @@ def main():
 
     # All data folders: ultimately 64 x 15
     # Modify the directory to run on particular experiments directory(ies)
-    data_folders = glob2.glob("experiments/*/*")
-    # print(data_folders)
+    data_folders = glob2.glob("/Users/dieumynguyen/Desktop/Projects/bee_communication/experiments/*/*")
+    print(data_folders[0][:86])
 
     # List of 64 unique sets of parameters
     # Any of the 15 folders will contain 64 sets with same names, so choose any
-    sets_list = next(os.walk('experiments/07M_21D-16H_48M_15S/'))[1]
+    sets_list = next(os.walk(data_folders[0][:86]))[1]
     # print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above

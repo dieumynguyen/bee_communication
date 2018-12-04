@@ -13,7 +13,7 @@ from matplotlib.colors import ListedColormap
 from modules.Bees import Bee
 
 from modules.Bees import Swarm
-from modules.Plotting_test import Plotter
+from modules.Plotting import Plotter
 
 class Environment(Plotter):
     def __init__(self, bees, diffusion_coefficient, spatiotemporal_parameters, plot_params, data_dir_path, real_time_visualization, plotting_on):
@@ -142,8 +142,12 @@ class Environment(Plotter):
             term_2 = (self.x_grid - emission_source["x"] - emission_source["bias_x"] * delta_t)**2 + (self.y_grid - emission_source["y"] - emission_source["bias_y"] * delta_t)**2
             term_3 = 4 * self.diffusion_coefficient * delta_t + 1e-9
 
+
+            # Dec 1: Try adding decay to exp term
+            decay_rate = 3.0
             # Calculate current bee's concentration map
-            emission_source_map = term_1 * np.exp(-(term_2 / float(term_3)))
+            emission_source_map = term_1 * np.exp(-(term_2 / float(term_3)) - (decay_rate * delta_t))
+            # emission_source_map -= (decay_rate * emission_source_map)
 
             # Update concentration map
             environment_concentration_map += emission_source_map
@@ -281,5 +285,5 @@ class Environment(Plotter):
 
     def _save_concentration_map(self):
         for map_i, map in enumerate(self.concentration_map_history):
-            with h5py.File("{}/concentration_maps/concentration_map_history_{}.h5".format(self.data_dir_path, map_i), "w") as outfile:
+            with h5py.File("{}/concentration_maps/concentration_map_history_{}.h5".format(self.data_dir_path, str(map_i).zfill(3)), "w") as outfile:
                 outfile.create_dataset("concentration_map_history", data=map)

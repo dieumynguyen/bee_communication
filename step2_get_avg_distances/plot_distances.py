@@ -26,7 +26,7 @@ plt.rcParams['xtick.labelsize'] = 14
 plt.rcParams['ytick.labelsize'] = 14
 plt.rcParams['legend.fontsize'] = 10
 plt.rcParams['figure.titlesize'] = 14
-plt.rcParams['lines.linewidth'] = 1
+plt.rcParams['lines.linewidth'] = 4
 params = {"ytick.color" : "#000000",
           "xtick.color" : "#000000",
           "axes.labelcolor" : "#000000",
@@ -71,12 +71,12 @@ def main():
         os.rename(os.path.join(path, file), os.path.join(path, standardize_filenames(file)))
 
     # Get list of files in correct order
-    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*T0.005*.json")))
+    reps_list = list(map(lambda x : x.split("/")[-1], glob2.glob("avg_distance_data/*.json")))
     reps_list = reps_list[::-1]
     updated_reps_list = sorted(reps_list, key = lambda x: (x.split("_")[1], x[2]))[::-1]
 
     # Start plotting!
-    fig, axes = plt.subplots(7, 6, sharex=True, sharey=True, figsize=(20,20))
+    fig, axes = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(10,10))
 
     # Plot subplots
     for j, ax in enumerate(axes.flatten()):
@@ -95,7 +95,7 @@ def main():
                 ax.spines['right'].set_visible(False)
                 ax.spines['top'].set_visible(False)
 
-                plt.xlim(0, 320)
+                plt.xlim(0, 640)
                 plt.ylim(0, 5)
                 ax.set_title('{}'.format(fname), fontsize=10)
 

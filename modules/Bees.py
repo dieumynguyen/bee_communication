@@ -47,7 +47,8 @@ class Bee(object):
         self.num_timesteps_waited = 0
 
         # Bias is directed pheromone emission for workers
-        self.bias_x, self.bias_y = bias
+        # self.bias_x, self.bias_y = bias
+        self.bias_x, self.bias_y = (0, 0)
 
         # Emission period
         self.emission_period = emission_period
@@ -178,20 +179,20 @@ class Bee(object):
         # Why are bees disappearing when they're constrained?
 
         # If empty local map... then walk
-        if self.found_queen:
-            # Pick direction, sign, and magnitude
-            direction = "x" if np.random.uniform() < 0.5 else "y"
-            sign = 1 if np.random.uniform() < 0.5 else -1
-            steps = 5
-
-            # Constrain movement to board (self.x and self.y here)
-            self.__dict__[direction] += sign*self.delta_x*steps
-
-            if self.__dict__[direction] <= self.min_x:
-                self.__dict__[direction] += self.delta_x*steps
-
-            elif self.__dict__[direction] >= self.max_x:
-                self.__dict__[direction] -= self.delta_x*steps
+        # if self.found_queen:
+        #     # Pick direction, sign, and magnitude
+        #     direction = "x" if np.random.uniform() < 0.5 else "y"
+        #     sign = 1 if np.random.uniform() < 0.5 else -1
+        #     steps = 5
+        #
+        #     # Constrain movement to board (self.x and self.y here)
+        #     self.__dict__[direction] += sign*self.delta_x*steps
+        #
+        #     if self.__dict__[direction] <= self.min_x:
+        #         self.__dict__[direction] += self.delta_x*steps
+        #
+        #     elif self.__dict__[direction] >= self.max_x:
+        #         self.__dict__[direction] -= self.delta_x*steps
 
 
             # return
@@ -246,6 +247,8 @@ class Bee(object):
         emitting = False   # TESTING NOV 19
         if self.type == "queen":
             emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
+            # test concentration map of 1 bee
+            # emitting = True if self.pheromone_emission_timestep <= self.emission_period else False
         else:
             # emitting = self.pheromone_emission_timestep <= self.emission_period
             # emitting = True if self.pheromone_emission_timestep % self.emission_period == 1 else False
@@ -381,11 +384,15 @@ class Bee(object):
             # Define a scalar multiplier for w_x and worker_y
             # Set to 1 for now
             # 21Aug2018 - fix hardcode
-            w_b = 3
+            w_b = 0
 
             # Update bias - unit vectors
-            self.bias_x = w_b * (bias_direction_x / float(magn))
-            self.bias_y = w_b * (bias_direction_y / float(magn))
+            # self.bias_x = w_b * (bias_direction_x / float(magn))
+            # self.bias_y = w_b * (bias_direction_y / float(magn))
+
+            # Turn off bias
+            self.bias_x = 0
+            self.bias_y = 0
 
             # DM: Test fixing the bias
             # self.bias_x =   0
@@ -500,7 +507,8 @@ class Swarm(object):
                 "pheromone" : False
             },
             "movement"                  : (0.001, 0.001),
-            "bias"                      : temp_bias,
+            # "bias"                      : temp_bias,
+            "bias"                      : (0, 0),
             "emission_period"           : emission_periods["worker"],
             "queen_movement_params"     : queen_movement_params,
             "plot_dir"                  : "{}/worker_{}".format(worker_plot_dir, bee_i),
