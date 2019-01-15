@@ -42,7 +42,7 @@ class Bee(object):
 
         # self.wait_threshold = int(np.random.normal(10, 1)) # wait X (10???) timesteps after finding the queen before moving
         # DM: test wait_threshold to be 4
-        self.wait_threshold = 6
+        self.wait_threshold = 10  # Dec 4... changed to 10
 
         self.num_timesteps_waited = 0
 
@@ -110,7 +110,8 @@ class Bee(object):
             # self.scenting = True
 
         # Check if queen has been found
-        if self.found_queen_direction:
+        # Dec 4: added and...
+        if self.found_queen_direction: # try this for more accurate movement
             # Check if queen-directed movement can be enabled yet
             if self.num_timesteps_waited < self.wait_threshold:
                 self.num_timesteps_waited += 1
@@ -274,7 +275,9 @@ class Bee(object):
             "scenting"              : self.scenting,
             "type"                  : self.type,
             # DM added 15July2018: save local map
-            "local_map"             : self.local_map
+            "local_map"             : self.local_map,
+            # DM added 02Dec2018: get walking information
+            "queen_directed_movement": self.queen_directed_movement
 
         }
 

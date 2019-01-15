@@ -22,7 +22,7 @@ def init_factors():
     global worker_bee_concentrations
     # worker_bee_concentrations = np.linspace(0.005, 0.4, CONDITION_COUNTS["worker_concentration"])
     # worker_bee_concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
-    worker_bee_concentrations = [0.02]
+    worker_bee_concentrations = [0.05]
 
     global diffusion_coefficients
     # diffusion_coefficients = np.linspace(0.05, 0.5, CONDITION_COUNTS["diffusion_coefficient"])
@@ -32,7 +32,7 @@ def init_factors():
     global worker_bee_thresholds
     # worker_bee_thresholds = np.linspace(0.005, 0.5, CONDITION_COUNTS["worker_threshold"])
     # worker_bee_thresholds = [0.005, 0.5]
-    worker_bee_thresholds = [0.005]
+    worker_bee_thresholds = [0.1]
 
     # DM added 18Aug2018
     global emission_bias # w_b

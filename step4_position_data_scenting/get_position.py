@@ -22,7 +22,7 @@ def get_position_data(param_set_json):
 
         all_distances = {}
         # Loop over 50 workers
-        for i in range(1, 51):
+        for i in range(1, 101):
             position = data[j]["Replicate {}".format(j+1)]["position_history"]["worker_{}".format(i)]
             all_distances["worker_{}".format(i)] = position
 

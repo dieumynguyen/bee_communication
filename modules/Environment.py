@@ -144,7 +144,7 @@ class Environment(Plotter):
 
 
             # Dec 1: Try adding decay to exp term
-            decay_rate = 3.0
+            decay_rate = 5.0
             # Calculate current bee's concentration map
             emission_source_map = term_1 * np.exp(-(term_2 / float(term_3)) - (decay_rate * delta_t))
             # emission_source_map -= (decay_rate * emission_source_map)
@@ -170,7 +170,8 @@ class Environment(Plotter):
             "bias_x"                : measurement["bias_x"],
             "bias_y"                : measurement["bias_y"],
             # DM added 15July2018: save local map
-            "local_map"             : measurement["local_map"]
+            "local_map"             : measurement["local_map"],
+            "queen_directed_movement": measurement["queen_directed_movement"]
         }
 
         concentration_data = measurement["concentration"]

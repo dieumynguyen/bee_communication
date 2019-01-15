@@ -102,12 +102,13 @@ def main():
     # All data folders: ultimately 64 x 15
     # Modify the directory to run on particular experiments directory(ies)
     data_folders = glob2.glob("/Users/dieumynguyen/Desktop/Projects/bee_communication/experiments/*/*")
-    print(data_folders[0][:86])
+    # print(data_folders[0][:86])
 
     # List of 64 unique sets of parameters
     # Any of the 15 folders will contain 64 sets with same names, so choose any
+    # sets_list = next(os.walk(data_folders[0][:86]))[1]
     sets_list = next(os.walk(data_folders[0][:86]))[1]
-    # print(sets_list)
+    print(sets_list)
 
     # Test "combine_replicates" function using 2 sample lists above
     for k in sets_list:
@@ -115,6 +116,8 @@ def main():
         save_lists_json = combine_replicates(data_folders, k)
 
     return None
+#
+# if __name__ == '__main__':
+#     main()
 
-if __name__ == '__main__':
-    main()
+main()
